@@ -4,18 +4,31 @@ import requests
 import json
 import csv
 import os
+from dotenv import load_dotenv
+import datetime
+
+
+load_dotenv() #> loads contents of the .env file into the script's environment
+
 
 #information inputs
 
 def to_usd (my_price):
     return "${0:.2f}".format(my_price)
 
+api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
 
-request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo"
-response = requests.get(request_url)
-#print(type(response)) # class requests.models.response
-#print(response.status_code) #200
-#print(response.text)
+while True:
+    symbol = input("Please input a stock symbol:")
+    request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={api_key}"
+    response = requests.get(request_url)
+    #print(type(response)) # class requests.models.response
+    #print(response.status_code) #200
+    #print(response.text)
+    if symbol in response.text:
+        break
+    else:
+        print("Please try a valid stock symbol again")
 
 parsed_response = json.loads(response.text)
 
@@ -28,6 +41,9 @@ dates = list(tsd.keys())
 last_day = dates[0]
 
 last_close = tsd[last_day]["4. close"]
+
+currentDT = datetime.datetime.now()
+
 
 #maximum prices 
 high_prices = []
@@ -69,7 +85,7 @@ print("-------------------------")
 print("SELECTED SYMBOL: MSFT")
 print("-------------------------")
 print("REQUESTING STOCK MARKET DATA...")
-print("REQUEST AT: 2018-02-20 02:00pm")
+print("REQUEST AT:" + str(currentDT.strftime("%Y-%m-%d %H:%M:%S")))
 print("-------------------------")
 print(f"LATEST DAY: {last_refreshed}")  
 print(f"LATEST CLOSE: {to_usd(float(last_close))}")
