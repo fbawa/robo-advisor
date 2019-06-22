@@ -6,7 +6,7 @@ import csv
 import os
 from dotenv import load_dotenv
 import datetime
-
+import finviz
 
 load_dotenv() #> loads contents of the .env file into the script's environment
 
@@ -79,10 +79,26 @@ with open(csv_file_path, "w") as csv_file:
         "volume": daily_prices["5. volume"],
         })
     
+#Recommendation
 
+fin_viz = finviz.get_stock(symbol)
+PE = str(fin_viz["P/E"])
+
+if PE == "-":
+    PE_format = 200
+else:
+    PE_format = float(PE)
+
+
+if PE_format < 16.64:
+    Recommendation = "Buy"
+    Reason = "Company's current price to earnings ratio is below historical S&P 500 Average and appears to be undervalued"
+else:
+    Recommendation = "Hold or Sell"
+    Reason = "Company's current price to earnings ratio is NOT below historical S&P 500 Average or company has no earnings and appears to be overvalued"
 
 print("-------------------------")
-print("SELECTED SYMBOL: MSFT")
+print("SELECTED SYMBOL:" + str(symbol))
 print("-------------------------")
 print("REQUESTING STOCK MARKET DATA...")
 print("REQUEST AT:" + str(currentDT.strftime("%Y-%m-%d %H:%M:%S")))
@@ -92,8 +108,9 @@ print(f"LATEST CLOSE: {to_usd(float(last_close))}")
 print(f"RECENT HIGH: {to_usd(float(recent_high))}")
 print(f"RECENT LOW: {to_usd(float(recent_low))}")
 print("-------------------------")
-print("RECOMMENDATION: BUY!")
-print("RECOMMENDATION REASON: TODO")
+print(f"PRICE-TO-EARNINGS RATIO: {PE}")
+print(f"RECOMMENDATION: {Recommendation}")
+print(f"RECOMMENDATION REASON: {Reason}")
 print("-------------------------")
 print(f"WRITING DATA TO CSV: {csv_file_path}...")
 print("-------------------------")  
