@@ -20,7 +20,7 @@ def to_usd (my_price):
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
 
 while True:
-    symbol = sg.PopupGetText('Your Robo-Advisor', 'Please input a stock symbol')
+    symbol = sg.PopupGetText('Please input a stock symbol','Your Robo-Advisor')
     #symbol = input("Please input a stock symbol:")
     request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={api_key}"
     response = requests.get(request_url)
@@ -30,6 +30,7 @@ while True:
     if symbol in response.text:
         break
     else:
+        sg.Popup('Invalid stock symbol. Please try again')
         print("Please try a valid stock symbol again")
 
 parsed_response = json.loads(response.text)
@@ -94,10 +95,10 @@ else:
 
 if PE_format < 16.64:
     Recommendation = "Buy"
-    Reason = "Company's current price to earnings ratio is below historical S&P 500 Average and appears to be undervalued"
+    Reason = "Company's current price to earnings ratio is below historical S&P 500 Average. As a result, we believe the company is undervalued"
 else:
     Recommendation = "Hold or Sell"
-    Reason = "Company's current price to earnings ratio is NOT below historical S&P 500 Average or company has no earnings and appears to be overvalued"
+    Reason = "Company's current price to earnings ratio is NOT below historical S&P 500 Average or company has no earnings. As a result, we believe the company is overvalued"
 
 print("-------------------------")
 print("SELECTED SYMBOL:" + str(symbol))
@@ -120,6 +121,7 @@ print("-------------------------")
 print("HAPPY INVESTING!")
 print("-------------------------")
 
+#Graphic interface
 sg.Popup("SELECTED SYMBOL:" + str(symbol),
 "-------------------------",
 "REQUESTING STOCK MARKET DATA...",
