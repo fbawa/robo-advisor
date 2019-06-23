@@ -7,9 +7,12 @@ import os
 from dotenv import load_dotenv
 import datetime
 import finviz
+import PySimpleGUI as sg
 
 load_dotenv() #> loads contents of the .env file into the script's environment
 
+
+sg.Popup("Hello From PySimpleGUI!", "This is the shortest GUI program ever!")
 
 #information inputs
 
