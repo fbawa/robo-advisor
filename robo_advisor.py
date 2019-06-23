@@ -12,8 +12,6 @@ import PySimpleGUI as sg
 load_dotenv() #> loads contents of the .env file into the script's environment
 
 
-sg.Popup("Hello From PySimpleGUI!", "This is the shortest GUI program ever!")
-
 #information inputs
 
 def to_usd (my_price):
@@ -22,7 +20,8 @@ def to_usd (my_price):
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
 
 while True:
-    symbol = input("Please input a stock symbol:")
+    symbol = sg.PopupGetText('Your Robo-Advisor', 'Please input a stock symbol')
+    #symbol = input("Please input a stock symbol:")
     request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={api_key}"
     response = requests.get(request_url)
     #print(type(response)) # class requests.models.response
@@ -121,3 +120,22 @@ print("-------------------------")
 print("HAPPY INVESTING!")
 print("-------------------------")
 
+sg.Popup("SELECTED SYMBOL:" + str(symbol),
+"-------------------------",
+"REQUESTING STOCK MARKET DATA...",
+"REQUEST AT:" + str(currentDT.strftime("%Y-%m-%d %H:%M:%S")),
+"-------------------------",
+f"LATEST DAY: {last_refreshed}",  
+f"LATEST CLOSE: {to_usd(float(last_close))}",
+f"RECENT HIGH: {to_usd(float(recent_high))}",
+f"RECENT LOW: {to_usd(float(recent_low))}",
+"-------------------------",
+f"PRICE-TO-EARNINGS RATIO: {PE}",
+f"RECOMMENDATION: {Recommendation}",
+f"RECOMMENDATION REASON: {Reason}",
+"-------------------------",
+f"WRITING DATA TO CSV: {csv_file_path}...",
+"-------------------------",  
+"-------------------------",
+"HAPPY INVESTING!",
+"-------------------------")
